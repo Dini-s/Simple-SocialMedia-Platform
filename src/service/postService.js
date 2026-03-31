@@ -2,7 +2,7 @@ import { PostModel } from "../models/PostModel";
 
 export class PostService {
 
-    static createPost(postData, creatorId, imageFile = null) {
+    static async createPost(postData, creatorId, imageFile = null) {
         let imagUrl = null;
 
         if (imageFile) {
@@ -17,7 +17,7 @@ export class PostService {
         });
     }
 
-    static getAllPosts(page = 1, limit = 10) {
+    static async getAllPosts(page = 1, limit = 10) {
         page = parseInt(page);
         limit = parseInt(limit);
 
@@ -27,7 +27,7 @@ export class PostService {
         return PostModel.findAll(page, limit);
     }
 
-    static getPostById(id) {
+    static async getPostById(id) {
         const post = PostModel.findById(id);
 
         if (!post) {
@@ -36,7 +36,7 @@ export class PostService {
         return post;
     }
 
-    static updatePost(id, upateData, userId, imageFile = null) {
+    static async updatePost(id, upateData, userId, imageFile = null) {
         const post = PostModel.findById(id);
 
         if (!post) {
@@ -59,7 +59,7 @@ export class PostService {
 
     }
 
-    static deletePost(id, userid) {
+    static async deletePost(id, userid) {
         const post = PostModel.findById(id);
 
         if (!post) {
@@ -77,7 +77,7 @@ export class PostService {
         return PostModel.delete(id);
     }
 
-    static getUserPosts(userid) {
+    static async getUserPosts(userid) {
         return PostModel.findByCreator(userid);
     }
 }
