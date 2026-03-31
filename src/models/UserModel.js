@@ -16,11 +16,11 @@ export class UserModel {
         return user;
     }
 
-    static findyByEmail(email) {
+    static findByEmail(email) {
         return users.find(user => user.email === email);
     }
 
-    static findbyId(id) {
+    static findById(id) {
         return users.find(user => user.id === parseInt(id));
     }
 
