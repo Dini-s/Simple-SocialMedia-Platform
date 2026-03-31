@@ -1,4 +1,4 @@
-import { use } from "react";
+import bcrypt from 'bcryptjs';
 import { UserModel } from "../models/UserModel";
 import jwt from 'jsonwebtoken';
 
@@ -7,10 +7,10 @@ export class AuthService {
     static async register(userData) {
 
         //check if user exists
-        const existUser = UserModel.findyByEmail(userData.email);
+        const existUser = UserModel.findByEmail(userData.email);
 
         if (existUser) {
-            throw new Error('User already Register');
+            throw new Error('User already registered');
         }
 
         const hashedPassword = await bcrypt.hash(userData.password, 10);
@@ -35,7 +35,7 @@ export class AuthService {
 
     static async login(email, password) {
 
-        const user = UserModel.findbyId(email);
+        const user = UserModel.findByEmail(email);
         if (!user) {
             throw new Error('Invalid credentials');
         }
@@ -61,7 +61,7 @@ export class AuthService {
     static generateToken(userId) {
         return jwt.sign(
             { userId },
-            process.env.JWT_SECRET,
+            process.env.JWT_SECRET || 'secretkey',
             { expiresIn: '1d' }
         )
     }
