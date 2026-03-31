@@ -1,0 +1,83 @@
+import { PostModel } from "../models/PostModel";
+
+export class PostService {
+
+    static createPost(postData, creatorId, imageFile = null) {
+        let imagUrl = null;
+
+        if (imageFile) {
+
+            imagUrl = `/upload/${imageFile.filename}`;
+        }
+
+        return PostModel.create({
+            ...postData,
+            creatorId,
+            imagUrl
+        });
+    }
+
+    static getAllPosts(page = 1, limit = 10) {
+        page = parseInt(page);
+        limit = parseInt(limit);
+
+        if (page < 1) page = 1;
+        if (limit < 1 || limit > 50) limit = 10;
+
+        return PostModel.findAll(page, limit);
+    }
+
+    static getPostById(id) {
+        const post = PostModel.findById(id);
+
+        if (!post) {
+            throw new Error('Post not found')
+        }
+        return post;
+    }
+
+    static updatePost(id, upateData, userId, imageFile = null) {
+        const post = PostModel.findById(id);
+
+        if (!post) {
+            throw new Error('Post not found')
+        }
+        if (post.creator !== parseInt(userId)) {
+            throw new Error('Unauthorized to update this post');
+        }
+
+        let imageUrl = post.imagUrl;
+        if (imageFile) {
+            if (post.imagUrl) {
+                const oldImagePath = path.join(__dirname, '../../', post.imageUrl);
+                fs.unlink(oldImagePath).catch(console.error);
+            }
+            imageUrl = `/uploads/${imageFile.filename}`;
+        }
+
+        return PostModel.update(id, { ...upateData, imageUrl });
+
+    }
+
+    static deletePost(id, userid) {
+        const post = PostModel.findById(id);
+
+        if (!post) {
+            throw new Error('Post not found');
+        }
+
+        if (post.creator !== parseInt(userId)) {
+            throw new Error('Unauthorized to update this post');
+        }
+
+        if (post.imagUrl) {
+            const oldImagePath = path.join(__dirname, '../../', post.imageUrl);
+            fs.unlink(oldImagePath).catch(console.error);
+        }
+        return PostModel.delete(id);
+    }
+
+    static getUserPosts(userid) {
+        return PostModel.findByCreator(userid);
+    }
+}
