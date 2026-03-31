@@ -1,4 +1,4 @@
-class Post {
+export class Post {
     constructor(id, title, content, creator, imgeUrl = null) {
         this.id = id;
         this.title = title;

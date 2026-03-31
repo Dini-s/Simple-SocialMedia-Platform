@@ -1,3 +1,5 @@
+import { Post } from "./post";
+
 const posts = [];
 let postIdCounter = 1;
 
